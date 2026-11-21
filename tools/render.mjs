@@ -18,7 +18,8 @@ const { chromium } = require('playwright');
 const out = process.argv[2] ?? join(root, 'entry.png');
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1024, height: 1024 }, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(join(root, 'src', 'page.html')).href);
+const src = process.env.PAGE ?? join(root, 'src', 'front.html');
+await page.goto(pathToFileURL(src).href);
 await page.evaluate(() => document.fonts.ready);
 // Fail loudly if the layout spills past the square instead of silently cropping it.
 const overflow = await page.evaluate(() => {
@@ -26,6 +27,12 @@ const overflow = await page.evaluate(() => {
   for (const el of document.querySelectorAll('.card, .brief li, .lead')) {
     if (el.scrollHeight > el.clientHeight + 1) bad.push(el.id || el.className + ': ' + el.textContent.slice(0, 40));
   }
+  // one-line items cut off with an ellipsis
+  for (const el of document.querySelectorAll('.brief li, .tag')) {
+    if (el.scrollWidth > el.clientWidth + 1) bad.push('cut: ' + el.textContent.slice(0, 50));
+  }
+  const last = document.querySelector('.foot').getBoundingClientRect().bottom;
+  if (last > 1024) bad.push('footer ends at ' + Math.round(last) + 'px');
   const h = document.documentElement.scrollHeight;
   return { bad, h };
 });
