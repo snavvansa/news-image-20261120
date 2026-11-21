@@ -11,7 +11,7 @@ world map whose numbered pins match the stories, and a date check listing the bi
 Thursday 19 November that are left out. Every story was checked against at least one wire or
 newspaper report dated 20 November.
 
-- `src/front.html` - the page, hand-drawn inline SVG and CSS; the map's coastlines are coarse
+- `src/v3.html` - the page, hand-drawn inline SVG and CSS; the map's coastlines are coarse
   hand-traced longitude/latitude outlines projected by a short script, no images or web fonts
 - `tools/render.mjs` - renders the page to `entry.png` with headless Chromium (Playwright)
 - `main.py` - the entry: copies `entry.png` to `/output/entry.png` (Python 3.13, stdlib only)
